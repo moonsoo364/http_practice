@@ -138,7 +138,7 @@ curl.exe --http1.0 -X POST http://localhost:18888/greeting
 
 | Status Code | 메서드 변경 여부 | 영구/일시적 여부 | 캐시 여부 | 설명 |
 | --- | --- | --- | --- | --- |
-| 301 Moved Permanetly | O | 영구적 | 캐시함 | 도메인 이전, 웹사이트 이전 |
+| 301 Moved Permanetly | O | 영구적 | O | 도메인 이전, 웹사이트 이전 |
 | 302 Found | O | 일시적 | 지시에 따름 | 일시적 관리, 모바일 기반 전송 |
 | 303 See Other | O | 일시적 | X | 로그인 후 페이지 전환 |
 | 307 Teporary Redirect | X | 일시적 | 지시에 따름 | RFC 7231에서 추가 | 
