@@ -33,6 +33,7 @@ title=The Art of Community&author=Jono Bacon
 단 실제로는 이 커맨드가 생성하는 바디는 브라우저의 웹 폼에서 전송한 것과는 약간 차이가 있습니다. 
 `-d` 옵션으로 보낼 경우 지정된 문자열을 그대로 연결합니다. 구분 문자인 &와 =이 있어도 그대로 연결해버리므로, 읽는 쪽에서 원래 데이터로 복원할 수 없습니다.
 예를 들어 'Head First PHP & MySQL'이라는 서적명을 넣오보면, 어디서 구분해야 할지 알기 어려워집니다.
+
 **curl**
 ```powershell
 curl.exe --http1.0 -d title="Head First PHP & MySQL" -d author="Lynn Beifhley, Michael Morrison" http://localhost:18888
@@ -53,6 +54,7 @@ title=Head+First+PHP+%26+MySQL&author=Lynn+Beighley%2C+Michael+Morrison
 curl에서는 이와 비슷한 기능을하는 --data-urlencode가 있습니다.
 이를 -d 대신에 사용해서 변환할 수가 있는데 이때 RFC 3986에서 정의된 방법으로 변환됩니다.
 RFC 1866과 다루는 문자 종류가 다소 다르며, 또한 공백이 +가 아니라 %20이 됩니다.
+
 **curl**
 ```powershell
 curl.exe --http1.0  --data-urlencode title="Head First PHP & MySQL" --data-urlencode author="Lynn Beifhley, Michael Morrison" http://localhost:18888
