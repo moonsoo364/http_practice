@@ -5,7 +5,10 @@ real http world 도서의 읽고 실습한 내용을 기록했습니다.
 # 기타 
 ## Go 설치
 [Go 설치 웹사이트](https://go.dev/dl/)
-
+## Go 프로젝트 실행
+```powershell
+go run .\1_HTTP_Syntax\server.go
+```
 ## Window에서 curl
 `powershell` 에서 curl.exe 명령어를 사용하면 cli에서 curl 명령어 사용가능
 ```powershell
