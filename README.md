@@ -1,37 +1,13 @@
 # http_practice
-real http world 도서에서 나오는 http 개념을 설명하기 위해 go 언어로 http 서버를 구축, curl로 테스트를 진행한다.
-각 장에 `.md` 확장자 파일에 curl 테스트 했던 코드 작성하였음
+real http world 도서의 읽고 실습한 내용을 기록했습니다.
+각 장에 `*_practice.md` 확장자 파일에 curl 테스트 했던 코드와 책의 개념 설명을 작성했습니다.
 
-# 1장 Http Syntax
+# 기타 
+## Go 설치
+[Go 설치 웹사이트](https://go.dev/dl/)
 
-## Client Header
-
-### 1. User-Agent
-
-클라이언트가 자신의 애플리케이션 이름을 넣는 곳. curl 커맨드를 사용하면 `curl/7.48.0` 과 같은 문자열이 들어간다. 서버는 이곳의 이름을 보고 응답을 구분하기도 한다. 스마트폰, PC의 경우도 브라우저의 종류에 따라 버전을 구분할 수 있다. 자신의 기능을 포함하는 브라우저의 목록을 나열하는 식으로 이름을 표시한다.
-
-### 2. Referer
-
-서버에서 참고하는 정보 클라이언트가 요청을 보낼 때 보고 있던 페이지의 URL을 보낸다. 페이지의 참조원을 서버가 참조하는데 이용한다.
-
-### 3. Authorization
-
-특별한 클라이언트에만 통신을 허가할 때 인증 정보를 서버에게 전달한다. RFC에서 몇 가지 표준 형식(Basic/Digest/Bearer)를 정했지만 AWS 깃 허브 등에서는 웹 서비스 자체 규격을 요구하기도 한다.
-
-## Server Header
-
-### 1. Content Type
-
-파일 종류를 지정. 여기에는 MIME 타입이라는 식별자를 기술한다. MIME 타입은 전자메일을 위해 만들어진 식별자다.
-
-### 2. Content-Length
-
-바디 크기, 만약 다음 헤더에서 소개하는 압축이 이루어지는 경우 압축 후의 크기가 들어간다.
-
-### 3. Content-Encoding
-
-압축이 이루어진 경우 압축 형식을 설명한다.
-
-### 4. Date
-
-문서가 생성된 날짜이다.
+## Window에서 curl
+`powershell` 에서 curl.exe 명령어를 사용하면 cli에서 curl 명령어 사용가능
+```powershell
+curl.exe --http1.0 http://localhost:18888/greeting
+```
