@@ -117,3 +117,29 @@ curl.exe -b .\2_HTTP_Symentics\cookie.txt http://localhost:18888
 시스템에서 필요한 ID나 수정되면 오작동으로 이어지는 민감한 정보를 넣는데 적합하지 않습니다. 정보를 넣을 때는 서명이나 암호화 처리가 필요합니다.
 
 기본적으로 인증 정보나 사라져도 상관없는 정보만 쿠키에 넣는 것이 좋습니다.
+
+## 2.6.1 Digest 인증
+Digest 인증은 해시 함수 (A->B는 쉽게 계산할 수 있지만 B->A는 쉽게 계산할 수 없다.)를 이용합니다.
+```shell
+WWW-Authrnticate: Disgest realm="영역명", nonce="1234567890", algorithm=MD5, qop="auth"
+```
+realm은 보호되는 영역의 이름으로 인증창에 표시됩니다. nonce는 서버가 생성하는 랜덤한 값입니다.
+qop는 보호수준을 나타냅니다. 클라이언트는 이곳에서 주어진 값과 무작위로 생성한 cnonce를 바탕으로 다음처럼 계산해서 response를 구합니다.
+```shell
+A1= 유저명 ":" realm":"" 패스워드"
+A2= HTTP 메서드 ":" 콘텐츠 URI
+response = MD5( MD5(A1) ":" nonce ":" cnonce ":" qop ":" MD5(A2) )
+```
+
+curl에서는 --digest와 -u 옵션으로 Digest 인증을 사용할 수 있습니다.
+```powershell
+curl.exe --http1.0 --digest -u user:pass http://localhost:18888/digest
+```
+## 2.6.2 쿠키를 이용한 세션 관리
+Digest 인증은 많이 사용되지 않습니다. 그이유는 다음과 같습니다.
+
+- 특정 폴더 아래를 보여주지 않는 방식으로 사용할 수 있어 사용자 고유 정보를 제공할 수 없다.
+- 요청할 때마다 패스워드와 아이디를 보내야 한다.
+- 로그인 화면을 사용자화 할 수 없다.
+- 명시적 로그오프를 할 수 없다.
+- 로그인한 단말을 식별할 수 없다.

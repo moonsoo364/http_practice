@@ -6,6 +6,17 @@ real http world 도서의 읽고 실습한 내용을 기록했습니다.
 ## Go 설치
 [Go 설치 웹사이트](https://go.dev/dl/)
 ## Go 프로젝트 실행
+go 모듈 설치
+
+```shell
+go mod init http_practice
+```
+
+```shell
+go run .\2_HTTP_Symentics\server_cookie.go
+```
+
+
 ```powershell
 go run .\1_HTTP_Syntax\server.go
 ```
@@ -14,3 +25,4 @@ go run .\1_HTTP_Syntax\server.go
 ```powershell
 curl.exe --http1.0 http://localhost:18888/greeting
 ```
+
