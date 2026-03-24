@@ -220,7 +220,7 @@ Referer: http://www.example.com/link.html
 여기엔 철자 오류가 없는 `Referrer`로 기입되었다는 것에 유의하세요.
 
 - Referrer-Policy 헤더
-- <meta name="referrer" cotent="설정값">
+- `<meta name="referrer" cotent="설정값">`
 - <a></a> 태그 등 `referrerpolicy` 속성 및 rel=`noreferrer` 속성
 
 리퍼러 정책으로서 설정할 수 있는 값에는 다음과 같은 것이 있습니다.
