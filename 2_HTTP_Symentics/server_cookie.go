@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -36,7 +36,11 @@ func handlerDigest(w http.ResponseWriter, r *http.Request) {
 	pp.Printf("Method: %s\n", r.Method)
 	pp.Printf("Header: %v\n", r.Header)
 	defer r.Body.Close()
-	body, _ := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Printf("Failed to read body: %v", err)
+		return
+	}
 	fmt.Printf("--body--\n%s\n", string(body))
 	if _, ok := r.Header["Authorization"]; !ok {
 		w.Header().Add("WWW-Authenticate", `Digest realm="Secret Zone", nonce="TgLc25U2BQA=f510a2780473e18e6587be702c2e67fe2b04afd", algorithm=MD5, qop="auth"`)

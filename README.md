@@ -20,8 +20,15 @@ go run .\2_HTTP_Symentics\server_cookie.go
 ```powershell
 go run .\1_HTTP_Syntax\server.go
 ```
+
+파일 빌드
+```popwershell
+go build -o .\build\server_cookie.exe .\2_HTTP_Symentics\server_cookie.go
+```
+
 ## Window에서 curl
 `powershell` 에서 curl.exe 명령어를 사용하면 cli에서 curl 명령어 사용가능
+
 ```powershell
 curl.exe --http1.0 http://localhost:18888/greeting
 ```
