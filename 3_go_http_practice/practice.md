@@ -94,3 +94,115 @@ resp, err := http.Post("http://localhost:18888", "text/plain", reader)
 ```go
 "multipart/form-data; boundary=" +writer.Boundary()
 ```
+
+# 3.10 쿠키 송수신
+지금까지는 HTTP 전송을 1회 요청하는 코드 였습니다, HTTP는 스테이트리스므로 각 전송끼리 사용하는 함수끼리 영향이 없습니다. 하지만 쿠키는 브라우저 내부에서 상태를 유지해야만 합니다. 이 경우는 지금까지 소개했던 함수가 아니라 `http.Client` 구조체를 이용합니다.
+
+**NOTE** Go에서 오브젝트 생성하는 문법은 크게 3가지로 나뉨, 이책에서는 주로 초깃값을 지정해서 생성하는 법을 이용
+```go
+// 초기값을 지정
+a := Struct{
+	Member: "Value",
+}
+// new 함수로 초기화
+a := new(Struct)
+
+// make 함수로 초기화
+// 배열의 슬라이스, map, 채널 전용
+a := make(map[string]string)
+```
+
+# 3.11 프록시 이용
+이번에 사용할 것은 `Transport`입니다. `Transport`는 실제 통신을 하는 백앤드입니다.
+아래는 실제 동작하는 curl 입니다.
+
+```powershell
+curl.exe -x http://localhost:18888 http://github.com
+```
+
+`client.Get`의 대상은 외부 사이트이지만, 프록시의 방향은 로컬 테스트 서버입니다.
+이 코드를 실행하면 외부로 직접 요청을 날리지 않고, 로컬 서버가 일단 요청을 받습니다.
+그러나 로컬 사버가 직접 응답을 반환하므로 `github.com`에 대한 액세스가 일어나지 않습니다.
+
+```go
+func main (){
+	proxyUrl, err := url.Parse("http://localhost:18888")
+	if err != nil {
+		panic(err)
+	}
+	client := http.Client{
+		Transport: &http.Transport{
+			Proxy: http.ProxyURL(proxyUrl),
+		},
+	}
+	resp, err := client.Get("http://github.com")
+	if err != nil {
+		panic(err)
+	}
+	dump, err := httputil.DumpResponse(resp, true)
+	if err != nil {
+		panic(err)
+	}
+	log.Println(string(dump))
+}
+```
+
+# 3.12 파일 시스템 액세스
+file 스키마는 로컬 파일에 액세스할 때 사용하는 스키마 입니다.
+curl에서는 다음 명령을 실행하면 작업 폴더 내 해당 파일 내용을 콘솔에 출력 할 수 있습니다.
+
+```powershell
+curl.exe file://main.go
+```
+
+`http.Transport`에는 이 밖의 스키마용 트랜스포트를 추가하는 `Register Protocol` 메서드가 있습니다.
+`http.NewFileTransport()`는 로컬 파일에 액세스할 수 있는 메서드 입니다.
+
+# 3.13 자유로운 메서드 전송
+지금까지의 살펴본 코드는 http 모듈 함수나 `http.Client` 구조체의 메서드를 사용했습니다.
+이들 메서드가 지원하는 것은 `GET`,`HEAD`,`POST` 뿐입니다. 다른 메서드를 요청할 때는
+`http.Request` 구조체의 오브젝트를 사용해야 합니다.
+
+다음은 `DELETE` 메서드를 구현한 예제 입니다.
+`http.Request` 구조체는 `http.NewRequest`라는 빌더 함수를 사용하여 생성합니다.
+함수의 인수는 HTTP 메서드, URI, 바디 입니다. 바디에는 Post와 마찬가지로 `io.Reader`를 사용할 수 있습니다.
+```go
+func main(){
+	client := &http.Client{}
+	request, err := http.NewRequest("DELETE", "http://localhost:18888",nil)
+	if err != nil {
+		panic(err)
+	}
+	resp, err := client.Do(request)
+	if err != nil {
+		panic(err)
+	}
+	dump, err := httputil.DumpResponse(resp, true)
+	if err != nil {
+		panic(err)
+	}
+	log.Println(string(dump))
+}
+```
+
+# 3.14 헤더 전송
+임의의 메서드를 전송할 때 사용한 `http.Request` 구조체에는 `Header` 라는 필드가 있습니다.
+이는 `http.Response` 의 헤더와 같습니다. GET 메서드 예제에서는 `Get()` 메서드로 헤더를 가져왔습니다.
+헤더를 추가할 때는 `Add()` 메서드를 사용합니다.
+
+```go
+	request.Header.Add("Content-Type","application/json")
+```
+
+쿠키는 헤더에 설정하지 않아도 `http.Client`의 `Jar`에 `cookie.Jar`의 인스턴스를 설정해 송수신하게 됩니다.
+수동으로 헤더에 설정하면 받지 않은 쿠키도 자유롭게 이용할 수 있습니다.
+
+```go
+	request.AddCookie(&http.Cookie{Name: "test", Value:"test value"})
+```
+
+
+# 3.15 국제화 도메인
+Go 언어로도 URL을 변환할 수 있습니다.
+변환 처리는 `idna.ToASCII()`와 `idna.ToUnicode()` 함수로 실행합니다.
+도메인 이름을 `idna.ToASCII()`로 변환함으로써 지금까지 설명해온 API로 한글 도메인 정보를 가져올 수 있습니다.
